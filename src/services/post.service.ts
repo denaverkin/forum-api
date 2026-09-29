@@ -1,17 +1,19 @@
-import { postRepository } from '../repositories/post.repository.js';
-import type { IPost, CreatePostDto } from '../dtos/post.dto.js';
+import type { IPostRepository } from '../domain/post/repository.js';
+import type { IPostService } from './post.service.types.js';
 
+export const createPostService = (postRepository: IPostRepository): IPostService => {
+  return {
+    getPosts: (category, take) => {
+      return postRepository.getAll(category, take);
+    },
 
-export const postService = {
-  getPosts: (category?: string, take?: string): IPost[] => {
-    return postRepository.getAll(category, take);
-  },
+    getPostById: (id) => {
+      return postRepository.getById(id);
+    },
 
-  getPostById: (id: number): IPost | null => {
-    return postRepository.getById(id);
-  },
-
-  createPost: async (postData: CreatePostDto): Promise<IPost> => {
-    return await postRepository.addPost(postData);
-  }
+    createPost: async (postData) => {
+      return await postRepository.addPost(postData);
+    }
+  };
 };
+
