@@ -4,20 +4,20 @@ import type { CreatePostDto, GetPostsQueryDto } from '../../dtos/post.dto.js';
 
 export const createPostHandler = (postService: IPostService) => {
   return {
-    getPosts: (req: Request<{}, {}, {}, GetPostsQueryDto>, res: Response) => {
+    getPosts: async (req: Request<{}, {}, {}, GetPostsQueryDto>, res: Response) => {
       const { category, take } = req.query;
-      const posts = postService.getPosts(category, take);
+      const posts = await postService.getPosts(category, take);
       return res.status(200).json(posts);
     },
 
-    getPostById: (req: Request<{ id: string }>, res: Response) => {
+    getPostById: async (req: Request<{ id: string }>, res: Response) => {
       const id = parseInt(req.params.id, 10);
       
       if (isNaN(id)) {
         return res.status(400).json({ message: 'Invalid ID format' });
       }
 
-      const post = postService.getPostById(id);
+      const post = await postService.getPostById(id);
 
       if (!post) {
         return res.status(404).json({ message: `Post with ID ${id} not found` });
